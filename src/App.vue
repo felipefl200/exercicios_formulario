@@ -5,33 +5,35 @@
 			<form class="painel">
 				<div class="cabecalho">Formulário</div>
 				<Rotulo nome="E-mail">
-					<input type="text" v-model="email">
+					<!-- Modificadores do v-model => lazy, trim, number. ex: v-model.trim="usuario.email" -->
+					<input type="text" v-model="usuario.email">
 				</Rotulo>
 				<Rotulo nome="Senha">
-					<input type="password">
+					<input type="password" v-model="usuario.senha">
 				</Rotulo>
 				<Rotulo nome="Idade">
-					<input type="number">
+					<input type="number" v-model="usuario.idade">
 				</Rotulo>
-				<Rotulo nome="Mensagem">
-					<textarea name="" cols="30" rows="5"></textarea>
+				<Rotulo nome="Mensagem">					
+					<textarea name="" cols="30" rows="5" v-model="mensagem"></textarea>
 				</Rotulo>
 				<Rotulo nome="Características do Problema">
-					<span class="mr-4"><input type="checkbox" value="reproduzivel"> Reproduzível</span>
-					<span><input type="checkbox" value="intermitente"> Intermitente</span>
+					<span class="mr-4"><input type="checkbox" v-model="caracteristicas" value="reproduzivel"> Reproduzível</span>
+					<span><input type="checkbox" v-model="caracteristicas" value="intermitente"> Intermitente</span>
 				</Rotulo>
 				<Rotulo nome="Qual produto?">
-					<span class="mr-4"><input type="radio"> Web</span>
-					<span class="mr-4"><input type="radio"> Mobile</span>
-					<span><input type="radio"> Outro</span>
+					<span class="mr-4"><input type="radio" v-model="produto" value="web"> Web</span>
+					<span class="mr-4"><input type="radio" v-model="produto" value="mobile"> Mobile</span>
+					<span><input type="radio" v-model="produto" value="outro"> Outro</span>
 				</Rotulo>
 				<Rotulo nome="Prioridade">
-					<select name="" id="">
-						<option></option>
+					<select name="" id="" v-model="prioridade">
+						<!-- Se não for definido nenhum value e valor padrão é o nome da option -->
+						<option v-for="prioridade in prioridades" :key="prioridade.codigo" :value="prioridade.codigo">{{prioridade.nome}}</option>
 					</select>
 				</Rotulo>
 				<Rotulo nome="Primeira Reclamação?">
-					<Escolha />
+					<Escolha v-model="escolha"/>
 				</Rotulo>
 				<hr>
 				<button>Enviar</button>
@@ -39,28 +41,35 @@
 			<div class="painel">
 				<div class="cabecalho">Resultado</div>
 				<Rotulo nome="E-mail">
-					<span>{{email}}</span>
+					<span>{{usuario.email}}</span>
 				</Rotulo>
 				<Rotulo nome="Senha">
-					<span>???</span>
+					<span>{{usuario.senha}}</span>
 				</Rotulo>
 				<Rotulo nome="Idade">
-					<span>???</span>
+					<span>{{usuario.idade}}</span>
 				</Rotulo>
 				<Rotulo nome="Mensagem">
-					<span>???</span>
+					<!-- Para preservar os espaços em branco e tambem as quebras de linha use o estilo "white-space: pre;" -->
+					<span style="white-space: pre;">{{mensagem}}</span>
 				</Rotulo>
 				<Rotulo nome="Marque as Opções">
-					<span>???</span>
+					<span>
+						<ul>
+							<li v-for="opcao in caracteristicas" :key="opcao">
+								{{opcao}}
+							</li>
+						</ul>
+					</span>
 				</Rotulo>
 				<Rotulo nome="Qual produto?">
-					<span>???</span>
+					<span>{{produto}}</span>
 				</Rotulo>
 				<Rotulo nome="Prioridade">
-					<span>???</span>
+					<span>{{prioridade}}</span>
 				</Rotulo>
 				<Rotulo nome="Primeira Reclamação?">
-					<span>???</span>
+					<span>{{escolha}}</span>
 				</Rotulo>
 			</div>
 		</div>
@@ -74,9 +83,24 @@ import Escolha from './components/Escolha.vue'
 export default {
 	name: 'app',
 	components: { Rotulo, Escolha },
+	
 	data(){
 		return{
-			email: ''
+			prioridade: 1,
+			prioridades: [
+				{ codigo: 1, nome: 'Baixa'},
+				{ codigo: 2, nome: 'Média'},
+				{ codigo: 3, nome: 'Alta'}],
+				mensagem: '',
+				caracteristicas: [],				
+				produto: '',				
+				reclamacao: '',
+			usuario: {
+				email: '',
+				senha: '',
+				idade: ''				
+			},
+			escolha: true
 		}
 	}
 }
